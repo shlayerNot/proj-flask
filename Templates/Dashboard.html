@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+ 
+    <title>Dashboard</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fontawesome-free-5.15.4-web/css/all.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}">
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            {% for key, value in data.items() %}
+                {% if value is string %}
+                    ['{{ key }}', '{{ value }}'],
+                {% else %}
+                    ['{{ key }}', {{ value }}],
+                {% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Labels',
+          is3D: true,
+          //pieHole: 0.5
+          pieStartAngle: 100
+          /*slices: {
+            2: {offset: 0.2},
+            3: {offset: 0.3}
+          }*/
+          /*slices: {
+            1: { color: 'transparent' }
+          }*/
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
+  <style>
+    .negative{
+      background-color: #ff9900;
+      color: white;
+    }
+    .neutral{
+      background-color: #3366cc;
+      color: white;
+    }
+    .positive{
+      background-color: #dc3912;
+      color: white;
+    }
+  </style>
+  </head>
+  <body >
+    <!-- <nav class="navbar navbar-expand-md navbar-dark bg-dark text-center">
+ 
+        <ul class="nav justify-content-center">
+         
+            <h5 class="nav-link ">Sentiment Analysis on Twitter in the Philippines using Natural Language Processing</h5>
+        
+        </ul>
+    </nav> -->
+    <div class="jumbotron jumbotron-fluid text-center mb-0 p-4">
+      <div class="container">
+        <h1 class="lead animate__animated  animate__zoomIn" style="font-size: 40px;">Sentiment Analysis on Twitter in the Philippines using Natural Language Processing</h1>
+        <!-- <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p> -->
+      </div>
+    </div>
+   
+
+    <div class = "container mb-4">
+
+      <div class="row">
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <div class="card shadow-lg  animate__animated  animate__zoomIn">
+            <div class="card-header">
+              <i class="fab fa-twitter" style="color: #74c0fc;"></i>   Tweets Here
+            </div>
+            <div class="card-body">
+              <form method="POST" class="form" id="analyzeForm">
+                <div class="form-group">
+                   <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" name="tweet"></textarea>
+                 </div>
+                 <button class="btn btn-primary btn-block btn-lg btnAnalyze" type="submit" name="Analyze" id="btn"><i class="fab fa-searchengin"></i> Analyze</button>
+               </form>
+            </div>
+          </div>
+          
+          <div class="card shadow-lg mt-3">
+            <div class="card-body">
+              <div class="form-group" >
+                <ul class="list-group">
+                  {% if tweet %}
+                  <li class="list-group-item text-center"><h4>{{tweet}}</h4></li>
+                  {% endif %}
+                  {% if p1%}
+                  <li class="list-group-item"> NNB The tweet is
+                    <span class="badge
+                    {% if p1=='Negative' %}
+                      negative
+                    {% elif p1=='Positive' %}
+                    positive
+                    {% elif p1=='Neutral' %}
+                      neutral
+                    {% endif %}
+                    ">{{p1}}</span>
+                  </li>
+                  {% endif %}
+                  {% if p2 %}
+                  <li class="list-group-item">MNB The tweet is <span class="badge
+                    {% if p2=='Negative' %}
+                      negative
+                    {% elif p2=='Positive' %}
+                    positive
+                    {% elif p2=='Neutral' %}
+                      neutral
+                    {% endif %}
+                    ">{{p2}}</span></li>
+                  {% endif %}
+                  {% if p3 %}
+                  <li class="list-group-item">CNB The tweet is <span class="badge
+                      {% if p3=='Negative' %}
+                      negative
+                    {% elif p3=='Positive' %}
+                    positive
+                    {% elif p3=='Neutral' %}
+                      neutral
+                    {% endif %}
+                    ">{{p3}}</span></li>
+                  {% endif %}
+                  {% if s %}
+                  <li class="list-group-item">cnb The tweet percent <span class="badge
+                      {% if s=='Negative' %}
+                      negative
+                    {% elif s=='Positive' %}
+                    positive
+                    {% elif s=='Neutral' %}
+                      neutral
+                    {% endif %}
+                    ">{{s}}</span></li>
+                  {% endif %}
+                  
+                 
+                </ul>
+              </div>
+            </div>
+          </div>
+        
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      <div class="card shadow-sm animate__animated  animate__zoomIn">
+        <div class="card-header">
+          <i class="fas fa-chart-pie"></i>
+         Analyze Tweet Classification
+        </div>
+        <div class="card-body">
+          <div id="piechart_3d" style="width: 600px; height: 300px;"></div>
+        </div>
+      </div>
+      
+      <div class="card shadow-lg mt-3 mb-4">
+        
+          <div class="card-body">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th colspan="2">
+                    <h4 class="text-center">The total number of data is <span class="badge badge-success">{{total}}</span></h4>
+                  </th>
+                </tr>
+                <tr>
+                  <th>Classifier Name</th>
+                  <th>Accuracy Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td> Complement Naive Bayes</td>
+                  <td>{{Cnaive}} %</td>
+                </tr>
+  
+                <tr>
+                  <td> Multinomial Naive Bayes</td>
+                  <td>{{Mnaive}} %</td>
+                </tr>
+                <tr>
+                  <td> Bernoulli Naive Bayes</td>
+                  <td>{{Bnaive}} %</td>
+                </tr>
+              </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+   </div>
+    </div><!--row-->
+
+    </div><!-- container -->
+
+
+
+
+  <footer class="footer">
+    <div class="container">
+      <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Team Shlayer</span>
+    </div>
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script>
+    $('#analyzeForm').on('submit',function(){
+      $('.btnAnalyze').html(` Analyzing...
+      <div class="spinner-grow  spinner-border-sm" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+      
+      `)
+    })
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+  </script>
+</body>
+
+</style>
+</html>
