@@ -4,6 +4,10 @@ import numpy as np
 import pandas as pd
 import re
 
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
+
 #import warning
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
