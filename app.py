@@ -14,8 +14,8 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer, PorterStemmer
 from nltk.tag import pos_tag
 
-#app = Flask(__name__)
-app=Flask(__name__,template_folder='template')
+app = Flask(__name__)
+#app=Flask(__name__,template_folder='template')
 
 file = open("StopWords/flstopwords.txt", "r", encoding="utf8")
 flstopwords = file.read().split("\n")
